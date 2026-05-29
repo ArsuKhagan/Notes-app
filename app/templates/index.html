@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container { max-width: 700px; margin: 0 auto; }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    .form-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      padding: 12px;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus, textarea:focus { border-color: #6c63ff; }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+    button {
+      background: #6c63ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover { background: #574fd6; }
+
+    .notes-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .note-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .note-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; color: #fff; }
+    .note-content { color: #aaa; font-size: 0.9rem; line-height: 1.5; }
+    .note-date { color: #555; font-size: 0.8rem; margin-top: 10px; }
+
+    .delete-btn {
+      background: transparent;
+      border: 1px solid #3a3a3a;
+      color: #888;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .delete-btn:hover { background: #2a2a2a; color: #ff6b6b; border-color: #ff6b6b; }
+
+    .empty { color: #555; text-align: center; padding: 40px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Notes</h1>
+
+    <div class="form-card">
+      <form action="/notes" method="post">
+        <input type="text" name="title" placeholder="Заголовок..." required>
+        <textarea name="content" placeholder="Текст заметки..." required></textarea>
+        <button type="submit">Добавить заметку</button>
+      </form>
+    </div>
+
+    <div class="notes-list">
+      {% if notes %}
+        {% for note in notes %}
+        <div class="note-card">
+          <div>
+            <div class="note-title">{{ note.title }}</div>
+            <div class="note-content">{{ note.content }}</div>
+            <div class="note-date">{{ note.created_at.strftime('%d.%m.%Y %H:%M') }}</div>
+          </div>
+          <form action="/notes/{{ note.id }}/delete" method="post">
+            <button class="delete-btn" type="submit">удалить</button>
+          </form>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty">Заметок пока нет. Создай первую! 👆</div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
